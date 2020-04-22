@@ -1,0 +1,59 @@
+{% extends "administrator/base.html" %}
+{% block content %}
+{% block style %}
+
+{% endblock %}
+
+<form action="/administrator/CSV/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+  <div class="row" style="padding-left: 300px;">
+    <h2 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight: bold;">Faculty CSV</h2>
+    <div class="file-field input-field col s6">
+      <div class="btn btn-sm indigo">
+        <span>File</span>
+        <input type="file" name="csv_file">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text" placeholder="Upload File" required>
+        <input type="hidden" name="type" value="fac" />
+      </div>
+    </div>
+    <br/>
+      <input type="submit" value="Enter Data" class="btn btn-sm indigo">
+  </div>
+  </form>
+  <form action="/administrator/CSV/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <div class="row" style="padding-left: 300px;">
+      <h2 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight: bold;">Book CSV</h2>
+      <div class="file-field input-field col s6">
+        <div class="btn btn-sm indigo">
+          <span>File</span>
+          <input type="file" name="csv_file">
+        </div>
+        <div class="file-path-wrapper">
+          <input class="file-path validate" type="text" placeholder="Upload File" required>
+          <input type="hidden" name="type" value="Book" />
+        </div>
+      </div>
+      <br/>
+        <input type="submit" value="Enter Data" class="btn btn-sm indigo">
+    </div>
+    </form>
+    <form action="/administrator/CSV/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+      <div class="row" style="padding-left: 300px;">
+        <h2 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight: bold;">Student CSV</h2>
+        <div class="file-field input-field col s6">
+          <div class="btn btn-sm indigo">
+            <span>File</span>
+            <input type="file" name="csv_file">
+          </div>
+          <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload File" required>
+            <input type="hidden" name="type" value="Student" />
+          </div>
+        </div>
+        <br/>
+          <input type="submit" value="Enter Data" class="btn btn-sm indigo">
+      </div>
+      </form>
+
+{% endblock %}

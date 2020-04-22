@@ -1,0 +1,300 @@
+<html lang="en">
+  {% load pwa %}
+{% load static %}
+<head>
+  {% progressive_web_app_meta %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <script type="text/javascript" src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
+
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  
+	
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <title>Department Library</title>
+  
+  <style>
+
+	.modal-close{
+  position: absolute;
+  top:10px;
+  right:10px;
+  padding:0;
+  margin:0;
+}
+
+.modal{
+ max-height:100%;
+ overflow:hidden;
+}
+
+#autocomplete-input::placeholder{
+	text-align:center;
+}
+
+  </style>
+
+  {%block style %}{% endblock %}
+</head>
+<body>
+
+  <div class="navbar-fixed">
+    <nav class="nav-wrapper indigo">
+      <div class="container">
+        <a href="/administrator/Books/" class="brand-logo">CE Library</a>
+        <a href="#" class="sidenav-trigger" data-target="mobile-links">
+          <i class="material-icons">menu</i>
+        </a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="/administrator/BookRequest/">Requests<span class="new badge blue-text white" data-badge-caption="" >{{ req_count|length }}</span></a></li>
+            <li><a href="/administrator/OverDue/">OverDue<span class="new badge indigo-text white" data-badge-caption="" >{{ overdue|length }}</span></a></li>
+            <li><a href="/administrator/Faculties/">Members</a></li>
+            <li><a href="/administrator/BookIssued/">Issued</a></li>
+            <li><a href="/administrator/CSV/">Upload CSV</a></li>
+            <li><a href="/administrator/aboutus/">AboutUs</a></li>
+            <li><a href="/login/logout/">Logout</a></li>
+			<!--<li>    
+                       <div class="center row">
+                          <div class="col s12 " >
+                            <div class="row" id="topbarsearch">
+                              <div class="input-field col s6 s12 red-text">
+                                <i class="white-text material-icons prefix">search</i>
+                                <input type="text" id="autocomplete-input" placeholder="Search" class="autocomplete white-text" >
+					
+                                </div>
+                              </div>
+                            </div>
+                          </div>          
+                      </li> -->
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <ul class="sidenav" id="mobile-links">
+    <li><a href="/administrator/BookRequest/">Requests<span class="new badge indigo-text white" data-badge-caption="" >{{ request_count }}</span></a></li>
+    <li><a href="/administrator/OverDue/">OverDue<span class="new badge indigo-text white" data-badge-caption="" >{{ request_count }}</span></a></li>
+    <li><a href="/administrator/Books/">Books</a></li>
+    <li><a href="/administrator/Faculties/">Member</a></li>
+    <li><a href="/administrator/BookIssued/">Issued</a></li>
+    <li><a href="/login/logout/">Logout</a></li>
+  </ul>
+  <br/>
+
+  <div class="fixed-action-btn">
+    <a class="btn-floating btn-large indigo">
+      <i class="large material-icons">add</i>
+    </a>
+    <ul>
+      <li><a href="#add" class="btn-floating indigo modal-trigger"><i class="material-icons">account_circle</i></a></li>
+      <li><a href="#addbook" class="btn-floating indigo darken-1 modal-trigger"><i class="material-icons">book</i></a></li>
+      <li><a href="#setting" id="modallink" class="btn-floating indigo modal-trigger"><i class="material-icons">settings</i></a></li>
+    </ul>
+  </div>
+  
+  {% block content %}{% endblock %}
+
+
+  <div id="setting" class="modal ">
+    <h5 class="modal-close">&#10005;</h5>
+    <div class="modal-content center">
+      <h4>Change Due Date</h4>
+      <br>
+  
+      <form action="/administrator/ChangeSettings/" method="POST" id="settingform">
+        {% csrf_token %}
+
+        <div class="input-field">
+          <i class="material-icons prefix">account_box</i>
+          <input type="text" id="studentduedate" name="studentduedate">
+          <label class="active" for="studentduedate">Student Due Date</label>
+        </div>
+        <br/>
+  
+          <div class="input-field">
+          <i class="material-icons prefix">email</i>
+          <input type="text" id="studentduecharge" name="studentduecharge">
+          <label class="active" for="studentduecharge">Student Due Charge In &#8377;/day</label>
+        </div>
+        
+        <br/>
+          
+      
+        <div class="input-field">
+          <i class="material-icons prefix">contact_mail</i>
+          <input type="text" id="facultyduedate" name="facultyduedate">
+          <label class="active" for="facultyduedate">Faculty Due Date</label>
+        </div>
+        <br>
+        
+        <div class="input-field">
+          <i class="material-icons prefix">contact_phone</i>
+          <input type="text" id="facultyduecharge" name="facultyduecharge">
+          <label class="active" for="facultyduecharge">Faculty Due Charge</label>
+        </div>
+        <br>
+        <input type="submit" value="Add/Edit" class="btn btn-large">
+        
+      </form>
+    </div>
+  </div>
+
+
+  <div id="addbook" class="modal">
+    <h5 class="modal-close">&#10005;</h5>
+    <div class="modal-content center">
+      <h4>Add Book</h4>
+      <br>
+  
+      <form action="/administrator/AddBook/" method="POST" id="addbookform">
+        {% csrf_token %}
+
+        <div class="input-field">
+          <i class="material-icons prefix">account_box</i>
+          <input type="text" id="Title" name="Title">
+          <label class="active" for="Title">Title</label>
+        </div>
+        
+        <br/>
+          
+        
+        <div class="input-field">
+          <i class="material-icons prefix">contact_mail</i>
+          <input type="text" id="Author" name="Author">
+          <label class="active" for="Author">Author</label>
+        </div>
+
+        <br/>
+
+        <div class="input-field">
+          <i class="material-icons prefix">contact_mail</i>
+          <input type="text" id="Publisher" name="Publisher">
+          <label class="active" for="Publisher">Publisher</label>
+        </div>
+        <br>
+
+        <div class="input-field">
+          <input type="hidden" name="ea" value="Add">
+        </div>
+        <br>
+        <input type="submit" value="Add" class="btn btn-large">
+        
+      </form>
+    </div>
+  </div>
+  
+  
+  <div id="add" class="modal ">
+    <h5 class="modal-close">&#10005;</h5>
+    <div class="modal-content center">
+      <h4>Add/Edit Member</h4>
+      <br>
+  
+      <form action="/administrator/NewMember/" method="POST" id="modal_form">
+        {% csrf_token %}
+
+        <div class="input-field">
+          <i class="material-icons prefix">account_box</i>
+          <input type="text" id="name" name="name">
+          <label class="active" for="name">Name</label>
+        </div>
+        <br/>
+  
+          <div class="input-field">
+          <i class="material-icons prefix">email</i>
+          <input type="text" id="id" name="id">
+          <label class="active" for="id">Id</label>
+        </div>
+        
+        <br/>
+          
+      
+        <div class="input-field">
+          <i class="material-icons prefix">contact_mail</i>
+          <input type="email" id="email" name="email">
+          <label class="active" for="email">Email</label>
+        </div>
+        <br>
+        
+        <div class="input-field">
+          <i class="material-icons prefix">contact_phone</i>
+          <input type="tel" maxlength="10" minlength="10" id="phone" name="phone_no">
+          <label for="phone">Contact</label>
+        </div>
+
+        <div class="input-field">
+          <input type="hidden" name="ea" value="Add">
+        </div>
+        <br>
+        <input type="submit" value="Add/Edit" class="btn btn-large">
+        
+      </form>
+    </div>
+  </div>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('.sidenav').sidenav();
+    });
+	
+	$(document).ready(function(){
+    $('.fixed-action-btn').floatingActionButton();
+  });
+  
+  $(document).ready(function(){
+  		$('.modal').modal({'dismissible':false});
+ });
+  </script>
+
+<script>
+  $("#modallink").click(function () {
+      var id = $(this).attr('id');
+      console.log(id);
+      var allip=$('#settingform')
+      var allinput=allip.find('.input-field');
+      console.log(allinput);
+      //allinput[4].childNodes[1].value="Edit";
+      $.ajax({
+        url: '/administrator/ChangeSettings/',
+        data: {
+  
+        },
+        dataType: 'json',
+        success: function (data) {
+          //var allip=$('#modal_form')
+          //var allinput=allip.find('.input-field');
+          //console.log(allinput)
+          allinput[0].childNodes[3].value=data.studentduedate;
+          M.updateTextFields();
+          allinput[1].childNodes[3].value=data.studentduecharge;
+          M.updateTextFields();
+          allinput[2].childNodes[3].value=data.facultyduedate;
+          M.updateTextFields();
+          allinput[3].childNodes[3].value=data.facultyduecharge;
+          M.updateTextFields();
+          //allinput[4].childNodes[1].value="Edit";
+        }
+      });
+
+    });
+
+</script>
+
+
+  
+
+{% block jquery %}{% endblock %}
+
+  </body>
+  </html>

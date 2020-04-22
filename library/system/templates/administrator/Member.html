@@ -1,0 +1,92 @@
+{% extends "administrator/base.html" %}
+{% block content %}
+  <table class="striped responsive-table center">
+        <thead>
+          <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Email</th>
+			  <th>Phone Number</th>
+			  <th>Edit</th>
+			  <th>Delete</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for faculty in faculties %}
+          <tr>
+            <td>{{ faculty.id }}</td>
+            <td>{{ faculty.name }}</td>
+			      <td>{{ faculty.email }}</td>
+			      <td>{{ faculty.phone_no }}</td>
+            <td><a href="#login" class="modal-trigger mymodal" id="{{ faculty.id }}"><i class="indigo-text material-icons prefix">edit</i></a></td>
+			      <td><a onclick="deletefun('{{ faculty.id }}')" id="{{ faculty.id }}"><i class="indigo-text material-icons prefix">delete</i></a></td>
+          </tr>
+          {% endfor %}
+          
+			
+          
+        </tbody>
+      </table>
+
+      
+      {% endblock %}
+
+
+
+
+   {% block jquery %}
+<script>
+        $(document).ready(function(){
+        $('.modal').modal();
+   });
+</script>
+
+<script>
+  $(".mymodal").click(function () {
+      var id = $(this).attr('id');
+      console.log(id);
+      var allip=$('#modal_form')
+      var allinput=allip.find('.input-field');
+      allinput[4].childNodes[1].value="Edit";
+      $.ajax({
+        url: '/administrator/Editdata/',
+        data: {
+          'id': id
+        },
+        dataType: 'json',
+        success: function (data) {
+          var allip=$('#modal_form')
+          var allinput=allip.find('.input-field');
+          console.log(allinput)
+          allinput[0].childNodes[3].value=data.name;
+          M.updateTextFields();
+          allinput[1].childNodes[3].value=data.id;
+          M.updateTextFields();
+          allinput[2].childNodes[3].value=data.email;
+          M.updateTextFields();
+          allinput[3].childNodes[3].value=data.phone_no;
+          M.updateTextFields();
+          //allinput[4].childNodes[1].value="Edit";
+        }
+      });
+
+    });
+</script>
+<script>
+  function deletefun(id){
+    $.ajax({
+        url: '/administrator/Delete/',
+        data: {
+          'id': id
+        },
+        dataType: 'json',
+        success: function (data) {
+          if(data.cond){
+            location.reload();
+          }
+        }
+      });
+  }
+</script>
+{% endblock %}

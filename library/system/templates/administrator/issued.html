@@ -1,0 +1,76 @@
+{% extends "administrator/base.html" %}
+
+{% block jquery %}
+<script>
+  /*ajax search */
+  $(document).ready(function () {
+      $("#myInput").on("keyup", function () {
+          var value = $(this).val().toLowerCase();
+          console.log(value);
+          $("#myTable tr").filter(function () {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+      });
+  });
+
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col s12">
+    <div class="input-field col s6">
+      <i class="indigo-text material-icons prefix">search</i>
+      <input type="text" id="myInput" placeholder="Search" class="autocomplete indigo-text" >
+    </div>
+  </div>
+</div>
+
+
+<br/>
+
+<table class="striped responsive-table center" >
+  <thead>
+    <tr>
+        <th>Book Id</th>
+        <th>Book Name</th>
+        <th>Faculty ID</th>
+        <th>Return Date</th>
+        <th>Renew Again</th>
+        <th>Return Book</th>
+    </tr>
+  </thead>
+
+  <tbody id="myTable">
+    {% for issue in allissued %}
+    <tr>
+        <td>{{ issue.book_id.id }}</td>
+        <td>{{ issue.book_id.title }}</td>
+        <td>{{ issue.faculty_id.id }}</td>
+        <td>{{ issue.return_date }}</td>
+        <td>
+            <form method="POST" action="/administrator/BookIssued/">{% csrf_token %}
+                <input type="hidden" name="issue_id" value="{{ issue.id }}">
+                <input type="hidden" name="status" value="renew">
+            <button type="submit" class="btn btn-small indigo" value="request"><i class="material-icons prefix">add_circle</i></button>
+            </form>
+        </td>
+        <td>
+            <form method="POST" action="/administrator/BookIssued/">{% csrf_token %}
+                <input type="hidden" name="issue_id" value="{{ issue.id }}">
+                <input type="hidden" name="status" value="return">
+            <button type="submit" class="btn btn-small indigo" value="request"><i class="material-icons prefix">clear</i></button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>
+
+
+
+{% endblock %}

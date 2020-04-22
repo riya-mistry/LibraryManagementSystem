@@ -1,0 +1,107 @@
+{% extends "administrator/base.html" %}
+
+{% block jquery %}
+<script>
+
+  /*ajax search */
+  $(document).ready(function () {
+      $("#myInput").on("keyup", function () {
+          var value = $(this).val().toLowerCase();
+          console.log(value);
+          $("#myTable tr").filter(function () {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+      });
+  });
+</script>
+
+<script>
+    $("#sendall").click(function () {
+        var date=new Date();
+        var val=date.getFullYear()+"-"+("0" + (date.getMonth() + 1)).slice(-2)+"-"+("0" + date.getDate()).slice(-2);
+        console.log(val)
+        if(localStorage.getItem("notification") == val){
+            M.toast({html: 'Notification Already Sent'})
+            var elem = $("#loading");
+            var instance = M.Modal.getInstance(elem);
+            instance.open()
+            instance.close();
+            console.log("closing")
+        }
+        else{
+          var elem = $("#loading");
+          var instance = M.Modal.getInstance(elem);
+          instance.open()
+            $.ajax({
+          url: '/administrator/Send_Notification/',
+          data: {
+            
+          },
+          dataType: 'json',
+          success: function (data) {
+            M.toast({html: 'Notification Sent'})
+            console.log(data.successful)
+            localStorage.setItem("notification", data.successful);
+            instance.close();
+          }
+        });
+        }
+  
+      });
+  </script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col s6">
+    <div class="input-field col s6">
+      <i class="indigo-text material-icons prefix">search</i>
+      <input type="text" id="myInput" placeholder="Search" class="autocomplete indigo-text" >
+    </div>
+  </div>
+</div>
+
+
+<br/>
+
+<table class="striped responsive-table center" >
+  <thead>
+    <tr>
+        <th>Book Id</th>
+        <th>Book Name</th>
+        <th>Faculty ID</th>
+        <th>Return Date</th>
+        <th>Charge</th>
+        <th><a id="sendall" class="btn indigo modal-trigger">Notify All</a></th>
+    </tr>
+  </thead>
+
+  <tbody id="myTable">
+    {% for issue in allissued %}
+    <tr>
+        <td>{{ issue.book_id.id }}</td>
+        <td>{{ issue.book_id.title }}</td>
+        <td>{{ issue.faculty_id.id }}</td>
+        <td>{{ issue.return_date }}</td>
+        <!--<td>{{ issue.return_date|timesince:today }}</td> -->
+        <td>{{ issue.calculate_due }}</td>
+        
+    </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>
+
+  <div id="loading" class="modal">
+    <div class="modal-content center">
+      <h4>Please Wait Sending Notification</h4>
+      <br>
+      <img src="/static/images/loading.gif" id="loadimg"/ >
+    </div>
+  </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,105 @@
+<html lang="en">
+  {% load pwa %}
+{% load static %}
+<head>
+  {% progressive_web_app_meta %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  
+	
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>Department Library</title>
+  
+  <style>
+
+	.modal-close{
+  position: absolute;
+  top:10px;
+  right:10px;
+  padding:0;
+  margin:0;
+}
+
+.modal{
+ max-height:100%;
+ overflow:hidden;
+}
+
+#autocomplete-input::placeholder{
+	text-align:center;
+}
+
+  </style>
+  {% block css %}{% endblock %}
+</head>
+<body>
+
+  <div class="navbar-fixed">
+    <nav class="nav-wrapper indigo">
+      <div class="container">
+        <a href="#" class="brand-logo">Department Library</a>
+        <a href="#" class="sidenav-trigger" data-target="mobile-links">
+          <i class="material-icons">menu</i>
+        </a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="/library/Request/">Request A Book</a></li>
+            <li><a href="/library/MyBooks/">My Books</a></li>
+            <li><a href="/library/ChangePassword">ChangePassword</a></li>
+            {% if user.get_username is not None %}
+          <li><a href="/login/logout">Logout</a></li>
+          {% endif %}
+
+			<!--<li>    
+                       <div class="center row">
+                          <div class="col s12 " >
+                            <div class="row" id="topbarsearch">
+                              <div class="input-field col s6 s12 red-text">
+                                <i class="white-text material-icons prefix">search</i>
+                                <input type="text" id="autocomplete-input" placeholder="Search" class="autocomplete white-text" >
+					
+                                </div>
+                              </div>
+                            </div>
+                          </div>          
+                      </li> -->
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <ul class="sidenav" id="mobile-links">
+    <li><a href="">Request A Book</a></li>
+    <li><a href="">My Books</a></li>
+  </ul>
+  <br/>
+  
+  {% block content %}{% endblock %}
+  
+  
+
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('.sidenav').sidenav();
+    });
+	
+	
+  
+  $(document).ready(function(){
+  		$('.modal').modal();
+ });
+  </script>
+  
+
+{% block jquery %}{% endblock %}
+
+  </body>
+  </html>

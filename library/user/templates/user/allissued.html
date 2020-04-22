@@ -1,0 +1,33 @@
+{% extends "user/base.html" %}
+
+
+
+{% block content %}
+
+<br/>
+
+<table class="striped responsive-table center" >
+  <thead>
+    <tr>
+        <th>Book Name</th>
+        <th>Author</th>
+        <th>Publisher</th>
+        <th>Due Date</th>
+        <th>Time Remaining</th>
+    </tr>
+  </thead>
+
+  <tbody id="myTable">
+    {% for issue in totalissued %}
+    <tr>
+      <td>{{ issue.book_id.title }}</td>
+      <td>{{ issue.book_id.author }}</td>
+      <td>{{ issue.book_id.publisher }}</td>
+      <td>{{ issue.return_date }}</td>
+      <td>{{ issue.return_date|timeuntil }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
